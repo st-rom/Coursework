@@ -38,5 +38,5 @@ print ("Visit this page and authorize access in your browser: "+ redirect_uri)
 code = (str(input("Paste in code in query string after redirect: ").strip()))
 
 access_token = api.exchange_code_for_access_token(code)
-print ("access token: " )
+print ("access token: ")
 print (access_token)
