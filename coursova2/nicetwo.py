@@ -14,7 +14,14 @@ import getpass
 
 
 class RealFriends:
+    """
+    Gets information about all users who liked your media
+    """
     def __init__(self, api):
+        """
+        Initiates parameters of the class
+        :param api: InstagramAPI(login, password)
+        """
         self.current_stats = []
         self.api = api
         self.api.login()
@@ -22,6 +29,11 @@ class RealFriends:
         self.name = InstagramAPI.LastJson['items'][0]['user']['username']
 
     def _get_userid(self, user):
+        """
+        Converts str -> int
+        :param user: str, username which will become user ID
+        :return: int, user ID
+        """
         info = 'https://www.instagram.com/' + user + '/?__a=1'
         try:
             webpage = urllib2.urlopen(info)
@@ -37,6 +49,11 @@ class RealFriends:
         return usernameID2
 
     def _time_converter(self, timer):
+        """
+        Converts string time into timestamp
+        :param timer: str, date which will be converted
+        :return: int, timestamp
+        """
         try:
             timer = time.mktime(datetime.strptime(timer, "%d/%m/%Y").timetuple())
             return timer
@@ -44,6 +61,10 @@ class RealFriends:
             return '0'
 
     def handmade_stats(self):
+        """
+        Allows you to choose any images and shows user's who liked this media
+        :return: list of users who liked image and how many images were selected
+        """
         likers = {}
         lik = users_likers_adt.UsersLikers(self.name, self.api)
         inp = ' '
@@ -75,6 +96,12 @@ class RealFriends:
         return self.current_stats
 
     def likers_stats(self, timer='0', last_number=0):
+        """
+        Allows to add a group og images simultaneously
+        :param timer: str, min time from which images were uploaded
+        :param last_number: int, max number of newest images
+        :return: list of users who liked image and how many images were selected
+        """
         likers = {}
         inform = users_likers_adt.UsersLikers(self.name, self.api)
         if timer != '0':
@@ -98,6 +125,10 @@ class RealFriends:
         return self.current_stats
 
     def __str__(self):
+        """
+        Creates string out of last given results
+        :return: str, how many pictures users liked
+        """
         string = ''
         for i in self.current_stats[0]:
             string += 'User ' + i[0] + ' liked ' + str(int(i[1] * 100 / self.current_stats[1])) +\
@@ -105,6 +136,9 @@ class RealFriends:
         return string
 
     def follow_4_follow(self):
+        """
+        A little function to help you to start follow those users who follow you
+        """
         InstagramAPI.getSelfUserFollowers()
         followers = InstagramAPI.LastJson
         InstagramAPI.getSelfUsersFollowing()
