@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
 from InstagramAPI import InstagramAPI
 import simplejson
 from node import *
@@ -7,11 +9,17 @@ except:
     import urllib.request
 
 
-
-
-
 class UsersLikers:
+    '''
+    This ADT helps to add images of the user to the node
+    for more convenient usage in future
+    '''
     def __init__(self, user, api):
+        '''
+        Initiates parameters
+        :param user: str, username
+        :param api: InstagramAPI(login, password)
+        '''
         self.user = self._get_userid(user)
         self.api = api
         self.list_of_added = []
@@ -44,8 +52,17 @@ class UsersLikers:
     def add(self, v1=0, v2=0):
         """
         Adds the value.
-        :param v1: the value to be added.
-        :param v2: the value to be added.
+        If v1 = 0 and v2 ==0 adds all user's images
+        :param v1: the value to be added or in case if v2 != 0 the value from which all images will be added up to v2
+        :param v2: the value to which numbers will be added.
+        >>> print(self.add())
+        {1: [u'inst_by_ukraine'], 2: [u'acleadc'], 3: []}
+
+        >>> print(self.add(-1))
+        {3: []}
+
+        >>> print(self.add(-3, -2))
+        {1: [u'inst_by_ukraine'], 2: [u'acleadc']}
         """
         if v1 < 0:
             v1 += len(self.info) + 1
@@ -71,6 +88,10 @@ class UsersLikers:
                 pass
 
     def all_added(self):
+        '''
+        Creates dictionary with image's numbers as keys and users who liked it as value
+        :return: dict, users who liked image
+        '''
         h = self._head
         dict_of_pix = {}
         while h is not None:
@@ -79,6 +100,11 @@ class UsersLikers:
         return dict_of_pix
 
     def _get_userid(self, user):
+        '''
+        Converts str -> int
+        :param user: str, username which will become user ID
+        :return: int, user ID
+        '''
         info = 'https://www.instagram.com/' + user + '/?__a=1'
         try:
             webpage = urllib2.urlopen(info)
@@ -94,6 +120,16 @@ class UsersLikers:
         return usernameID2
 
     def media_likers(self, numb):
+        '''
+        Returns list of usernames of users who liked media
+        :param numb: int, number of image starting from the newest uploads
+        :return: list of strings
+        >>> self.media_likers(4)
+        [u'anticafelv', u'pappa_ronny', u'aksesuaru_pasaule']
+
+        >>> self.media_likers(5)
+        []
+        '''
         media_id = self.info[numb - 1]['id']
         self.api.getMediaLikers(media_id)
         us = []
@@ -102,6 +138,10 @@ class UsersLikers:
         return us
 
     def __str__(self):
+        '''
+        Creates string
+        :return: str, list of added images and numbers of users who liked that image
+        '''
         h = self._head
         string = ''
         i = 0
@@ -114,7 +154,6 @@ class UsersLikers:
                      ': ' + str(len(h)) + ' known likes\n'
             i += 1
             h = h.next
-        print(self.info)
         return string
 
 if __name__ == "__main__":

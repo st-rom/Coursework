@@ -12,14 +12,25 @@ import getpass
 
 
 class Instagramer:
+    '''
+    Finds people who took a photo near some location an past x minutes and shows
+     if they have some friends in common with you
+    '''
     def __init__(self, api):
-        #self.login = login
-        #self.psw = psw
-        #InstagramAPI = InstagramAPI(login, psw)
+        '''
+        Initiates parameters of the class
+        :param api: InstagramAPI(login, password)
+        '''
         self.api = api
         self.api.login()
+        self.last_result = ''
 
     def _get_userid(self, user):
+        '''
+        Converts str -> int
+        :param user: str, username which will become user ID
+        :return: int, user ID
+        '''
         info = 'https://www.instagram.com/' + user + '/?__a=1'
         try:
             webpage = urllib2.urlopen(info)
@@ -35,6 +46,12 @@ class Instagramer:
         return usernameID2
 
     def _media_time(self, item, past=30):
+        '''
+        Compares time when picture was taken and real time and returns date string
+        :param item: dict, media object which will be checked
+        :param past: int, max time difference in minutes between upload time and time now
+        :return: string, if image feets in time and False otherwise
+        '''
         timestamp = item['device_timestamp']
         mon = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
         try:
@@ -85,28 +102,45 @@ class Instagramer:
         dif = ((int(real_time[3][0:2]) + need) * 60) + int(real_time[3][3:5]) - \
               (int(upl_time[3][0:2]) * 60 + int(upl_time[3][3:5]))
         # print dif
-        #real_time = time.strftime('%d %b %Y %H:%M:%S GMT', time.gmtime(item['taken_at'])).split(' ')
-        #dif2 = ((int(real_time[3][0:2]) + need) * 60) + int(real_time[3][3:5]) - \
-        #      (int(upl_time[3][0:2]) * 60 + int(upl_time[3][3:5]))
-        #print(dif2, upl_time, time.strftime('%d %b %Y %H:%M:%S GMT', time.gmtime(item['taken_at'])).split(' '))
         if abs(dif) < past:
             return ' '.join(upl_time[:-1])
         else:
             return False
 
     def geo_pix(self, place, past_time=30):
+        """
+        Returns all images and some information about them which were taken less than past_time ago
+        :param place: str, place were images were taken
+        :param past_time: int, max time difference in minutes between upload time and time now
+        :return: list of lists, some info about image
+        """
         users = []
         self.api.searchLocation(place)
+        loader = ' '
         for i in self.api.LastJson['items']:
-            print('-' + i['location']['name'])
+            # print('-' + i['location']['name'])
+            if len(loader) < 4:
+                loader += '*'
+                print(loader)
+            else:
+                loader = ' *'
+                print(loader)
             self.api.getLocationFeed(i['location']['pk'])
             for j in self.api.LastJson['items']:
                 if self._media_time(j, past_time) is not False:
                     users.append([i['location']['name'], self._media_time(j, past_time), j['user']['username'],
                                   j['image_versions2']['candidates'][0]['url']])
+        self.last_result = users
         return users
 
     def related_users(self, place, past_time=30):
+        """
+        Returns dictionary which contains information about
+        any connections between you and people who took photos in entered place
+        :param place: str, where photos were taken at
+        :param past_time: int, max time difference in minutes between upload time and time now
+        :return: dict, information about connections
+        """
         common = {'you_follow': [], 'follows_you': [], 'followed_by': [], 'follows': []}
         self.api.getSelfUsersFollowing()
         s_foling = [c['username'] for c in self.api.LastJson['users']]
@@ -127,7 +161,23 @@ class Instagramer:
             for l in list(set(s_foling) & set(folers) & set(s_folers)):
                 if i[2] + ' is followed by ' + l not in common['followed_by']:
                     common['followed_by'].append(i[2] + ' is followed by ' + l)
+        self.last_result = common
         return common
+
+    def __str__(self):
+        """
+        Creates string out of last results that were done
+        :return: str, information about last operation
+        """
+        string = ''
+        if type(self.last_result) == dict:
+            for i in self.last_result:
+                if self.last_result[i] != []:
+                    string += self.last_result[i] + '\n'
+        elif type(self.last_result) == list:
+            for i in self.last_result:
+                string += 'At ' + i[1] + ' GMT user ' + i[2] + ' uploaded photo near ' + i[0] + ': ' + i[3] + '\n'
+        return string
 
 
 if __name__ == "__main__":
@@ -139,10 +189,10 @@ if __name__ == "__main__":
         psw = '511999'
     InstagramAPI = InstagramAPI(login, psw)
     e = Instagramer(InstagramAPI)
-    print(e.related_users('Lviv Old Town', 200))
-    print(e.geo_pix('Lviv Old Town', 200))
-
-
+    print(e.related_users('Statue of Liberty', 200))
+    print(e)
+    print(e.geo_pix('Statue of Liberty', 200))
+    print(e)
 
 '''
 InstagramAPI.tagFeed("dzvinka_if")

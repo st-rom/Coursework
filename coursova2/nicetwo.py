@@ -6,7 +6,7 @@ import simplejson
 import operator
 try:
     import urllib2
-except ImportError:
+except:
     import urllib.request
 import time
 from datetime import datetime
