@@ -31,13 +31,14 @@ class Instagramer:
         :param user: str, username which will become user ID
         :return: int, user ID
         '''
+        #print(user)
         info = 'https://www.instagram.com/' + user + '/?__a=1'
         try:
             webpage = urllib2.urlopen(info)
             for line in webpage:
                 web_info = line.decode('utf-8')
             webpage.close()
-        except:
+        except NameError:
             with urllib.request.urlopen(info) as webpage:
                 for line in webpage:
                     web_info = line.decode('utf-8')
@@ -113,6 +114,15 @@ class Instagramer:
         :param place: str, place were images were taken
         :param past_time: int, max time difference in minutes between upload time and time now
         :return: list of lists, some info about image
+        >>> print(self.geo_pix('Statue of Liberty'))
+         [u'Statue Of Liberty, Liberty Island, New York City', '15 Jun 2017 03:52:11', u'ysabelvictoriabenitez',
+          u'http://scontent-waw1-1.cdninstagram.com/t51.2885-15/e35/19122435_874202616044765_3289123171168419840_n.jpg?ig_cache_key=MTUzNzQ1MzgxMzM2Mzc0NDc4Mw%3D%3D.2&se=7'],
+          [u'Liberty Island', '15 Jun 2017 02:49:45', u'sh.ocean', u'http://scontent-waw1-1.cdninstagram.com/t51.2885-15/e35/19122241_1417151758367601_7876705605497389056_n.jpg?ig_cache_key=MTUzNzQyMTM5OTAxODQ2MjYzNw%3D%3D.2&se=7'],
+           [u'Liberty Island', '15 Jun 2017 01:42:43', u'guzhixuan', u'http://scontent-waw1-1.cdninstagram.com/t51.2885-15/e35/19120567_233572653812503_8067180808005222400_n.jpg?ig_cache_key=MTUzNzM4ODgzNjA1Mjk5NTcwMg%3D%3D.2&se=7']]
+
+        >>> print(self.geo_pix('High Castle', 15))
+        [u'Lviv High Castle', '15 Jun 2017 03:52:11', u'ysabelvictoriabenitez',
+          u'http://scontent-waw1-1.cdninstagram.com/t51.2885-15/e35/19122435_874202616044765_3289123171168419840_n.jpg?ig_cache_key=MTUzNzQ1MzgxMzM2Mzc0NDc4Mw%3D%3D.2&se=7']]
         """
         users = []
         self.api.searchLocation(place)
@@ -140,6 +150,12 @@ class Instagramer:
         :param place: str, where photos were taken at
         :param past_time: int, max time difference in minutes between upload time and time now
         :return: dict, information about connections
+
+        >>> print(related_users('Lviv Town Hall'))
+        {'follows': [], 'you_follow': ['kolja_mak'], 'followed_by': ['lena200 is followed by jerony777'], 'follows_you': []}
+
+        >>> print(related_users('Lviv Town Hall'))
+        {'follows': [], 'you_follow': ['ulik_ren'], 'followed_by': [], 'follows_you': []}
         """
         common = {'you_follow': [], 'follows_you': [], 'followed_by': [], 'follows': []}
         self.api.getSelfUsersFollowing()
@@ -189,31 +205,7 @@ if __name__ == "__main__":
         psw = '511999'
     InstagramAPI = InstagramAPI(login, psw)
     e = Instagramer(InstagramAPI)
-    print(e.related_users('Statue of Liberty', 200))
+    e.related_users('Old Town Lviv', 200)
     print(e)
-    print(e.geo_pix('Statue of Liberty', 200))
+    e.geo_pix('Old Town Lviv', 200)
     print(e)
-
-'''
-InstagramAPI.tagFeed("dzvinka_if")
-items = InstagramAPI.LastJson["items"]
-count = 0
-c2 = 0
-for photo in items:
-    c2 += 1
-    InstagramAPI.getMediaLikers(photo["id"])
-    for userLiker in InstagramAPI.LastJson["users"]:
-        count += 1
-        if userLiker["username"] == 'jogryn':
-            print (userLiker["username"], photo['id'], count, c2, 'JOOOOOOOOOOOO')
-            break
-        print (userLiker["username"], photo['id'], count, c2)
-'''
-'''
-#Get everybody who liked
-InstagramAPI.getMediaLikers(media_id['items'][0]["id"])
-c = 0
-for userLiker in InstagramAPI.LastJson["users"]:
-    c += 1
-    print (userLiker["username"], c)
-'''

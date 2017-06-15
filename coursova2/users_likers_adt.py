@@ -157,8 +157,8 @@ class UsersLikers:
         return string
 
 if __name__ == "__main__":
-    InstagramAPI = InstagramAPI("pappa_ronny", "511999")
-    a = UsersLikers('jogryn', InstagramAPI)
+    InstagramAPI = InstagramAPI("jogryn", "511999")
+    a = UsersLikers('pappa_ronny', InstagramAPI)
     a.add(4)
     a.add(1)
     a.add(5, 6)
