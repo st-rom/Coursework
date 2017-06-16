@@ -178,7 +178,7 @@ class RealFriends:
         following = InstagramAPI.LastJson
         following = [ad['username'] for ad in following['users']]
         if self.current_stats[2] != self.name:
-            sure = raw_input(' Are you sure you want to follow ALL people who liked you images? '
+            sure = raw_input(' Are you sure you want to follow ALL people who liked selected images? '
                              'Print "yes" to agree or press any button for no\n ')
             if sure == 'yes':
                 self.likers_stats()
@@ -200,10 +200,10 @@ if __name__ == "__main__":
         psw = '511999'
     InstagramAPI = InstagramAPI(login, psw)
     a = RealFriends(InstagramAPI)
-    a.likers_stats('pooordude')#last_number=2)
+    a.likers_stats('dzwinka_stepaniuk')#last_number=2)
     print(a)
     print(a.one_user_check('bartman109'))
     print(a.one_user_check('dutefron'))
-    a.handmade_stats('pappa_ronny')
+    a.handmade_stats('dzwinka_stepaniuk')
     print(a)
     a.follow_4_follow()

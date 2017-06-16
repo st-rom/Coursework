@@ -68,7 +68,8 @@ class UsersLikers:
             v1 += len(self.info) + 1
         elif v1 == 0:
             v1 = 1
-            v2 = len(self.info)
+            if v2 == 0:
+                v2 = len(self.info)
         if v2 == 0:
             v2 = v1
         elif v2 < 0:
@@ -127,10 +128,13 @@ class UsersLikers:
         >>> self.media_likers(4)
         [u'anticafelv', u'pappa_ronny', u'aksesuaru_pasaule']
 
-        >>> self.media_likers(5)
-        []
+        >>> self.media_likers(-1)
+        [u'aksesuaru_pasaule']
         '''
-        media_id = self.info[numb - 1]['id']
+        if numb < 0:
+            media_id = self.info[len(self.info) + numb]['id']
+        else:
+            media_id = self.info[numb - 1]['id']
         self.api.getMediaLikers(media_id)
         us = []
         for i in self.api.LastJson['users']:
@@ -159,12 +163,12 @@ class UsersLikers:
 if __name__ == "__main__":
     InstagramAPI = InstagramAPI("jogryn", "511999")
     a = UsersLikers('pappa_ronny', InstagramAPI)
-    a.add(4)
-    a.add(1)
-    a.add(5, 6)
-    a.add(-3, -1)
-    a.add(-2)
-    a.add()
+    #a.add(4)
+    a.add(1, 2)
+    #a.add(5, 6)
+    #a.add(-3, -1)
+    #a.add(-2)
+    #a.add()
     print(a.all_added())
     print(a)
-    print(a.media_likers(11))
+    print(a.media_likers(-2))
