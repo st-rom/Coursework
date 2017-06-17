@@ -11,7 +11,7 @@ from datetime import datetime
 import getpass
 
 
-class Instagramer:
+class GeoFriends:
     '''
     Finds people who took a photo near some location an past x minutes and shows
      if they have some friends in common with you
@@ -204,7 +204,7 @@ if __name__ == "__main__":
         login = 'jogryn'
         psw = '511999'
     InstagramAPI = InstagramAPI(login, psw)
-    e = Instagramer(InstagramAPI)
+    e = GeoFriends(InstagramAPI)
     e.related_users('Old Town Lviv', 200)
     print(e)
     e.geo_pix('Old Town Lviv', 200)

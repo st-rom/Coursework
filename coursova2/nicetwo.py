@@ -26,7 +26,7 @@ class RealFriends:
         self.api = api
         self.api.login()
         self.api.getSelfUserFeed()
-        self.name = InstagramAPI.LastJson['items'][0]['user']['username']
+        self.name = self.api.LastJson['items'][0]['user']['username']
 
     def _get_userid(self, user):
         """
@@ -84,7 +84,7 @@ class RealFriends:
                     break
                 elif len(inp.split(' ')) == 2:
                     lik.add(int(inp.split(' ')[0]), int(inp.split(' ')[-1]))
-                elif inp.isdigit():
+                elif inp.isdigit() or (inp[1:].isdigit() and inp[0] == '-'):
                     lik.add(int(inp))
                 else:
                     print(' WRONG INPUT, try again or press "Enter" to finish')
@@ -172,13 +172,15 @@ class RealFriends:
         """
         A little function to help you to start follow those users who like you
         The list of people who like you contains only those who liked images from your last request if you
-        requested self media likers. Otherwise it will follow all people who liked your media and you don't follow them
+        requested self media likers. Otherwise it will follow all people who liked your media and you don't follow them.
+        If your last request was about another user program will suggest you to follow all users who liked
+        at least one your image
         """
-        InstagramAPI.getSelfUsersFollowing()
-        following = InstagramAPI.LastJson
+        self.api.getSelfUsersFollowing()
+        following = self.api.LastJson
         following = [ad['username'] for ad in following['users']]
         if self.current_stats[2] != self.name:
-            sure = raw_input(' Are you sure you want to follow ALL people who liked selected images? '
+            sure = raw_input(' Are you sure you want to follow ALL people who liked your images? '
                              'Print "yes" to agree or press any button for no\n ')
             if sure == 'yes':
                 self.likers_stats()
