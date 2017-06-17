@@ -2,7 +2,7 @@
 Instagram API
 First part: +
 Second part: +
-Third part: finishing pdf docs
+Third part: +
 Fourth part: finishing pdf docs
 Fifth part: in process
 
