@@ -38,3 +38,4 @@ print(a)
 print('If you want to you can start following those who liked selected pictures\n'
       'It is useful when you check likers of your account and want to start follow people who like staff that you post')
 a.follow_4_follow()
+print('Done')
