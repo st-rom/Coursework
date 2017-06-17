@@ -168,13 +168,14 @@ class RealFriends:
                       '%(' + str(i[1]) + '/' + str(self.current_stats[1]) + ') of selected images\n'
         return string
 
-    def follow_4_follow(self):
+    def follow_4_follow(self, perc=0):
         """
         A little function to help you to start follow those users who like you
         The list of people who like you contains only those who liked images from your last request if you
         requested self media likers. Otherwise it will follow all people who liked your media and you don't follow them.
         If your last request was about another user program will suggest you to follow all users who liked
         at least one your image
+        value perc: int, min % user had to liked of selected photos for you to start following him
         """
         self.api.getSelfUsersFollowing()
         following = self.api.LastJson
@@ -189,7 +190,7 @@ class RealFriends:
                              'Print "yes" to agree or press any button for no\n ')
         if sure == 'yes':
             for i in self.current_stats[0]:
-                if i[0] not in following:
+                if i[0] not in following and int(i[1] * 100 / self.current_stats[1]) > perc:
                     InstagramAPI.follow(self._get_userid(i[0]))
 
 
@@ -202,7 +203,7 @@ if __name__ == "__main__":
         psw = '511999'
     InstagramAPI = InstagramAPI(login, psw)
     a = RealFriends(InstagramAPI)
-    a.likers_stats('dzwinka_stepaniuk')#last_number=2)
+    a.likers_stats('dzwinka_stepaniuk')
     print(a)
     print(a.one_user_check('bartman109'))
     print(a.one_user_check('dutefron'))
