@@ -64,7 +64,7 @@ class RealFriends:
         """
         Allows you to choose any images and shows user's who liked this media
         :param user: str, username if user == '' then user = login
-        :return: list of users who liked image and how many images were selected
+        :return: list of users who liked image and how many images were selected(the same as likers_stats method)
         """
         likers = {}
         if user == '':
@@ -110,10 +110,10 @@ class RealFriends:
         :param last_number: int, max number of newest images
         :return: list of users who liked image and how many images were selected
         >>> print(likers_stats(timer='01/06/2017')
-        [[(u'inst_by_ukraine', 1), (u'acleadc', 1), (u'odegda_ukr', 1)], 9]
+        [[(u'inst_by_ukraine', 1), (u'acleadc', 1), (u'odegda_ukr', 1)], 9, 'jogryn']
 
         >>> print (likers_stats(last_number=2))
-        [[(u'inst_by_ukraine', 1), (u'acleadc', 1)], 2]
+        [[(u'inst_by_ukraine', 1), (u'acleadc', 1)], 2, 'jogryn']
         """
         likers = {}
         if user == '':
