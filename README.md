@@ -3,7 +3,7 @@ Instagram API
 First part: +
 Second part: +
 Third part: +
-Fourth part: finishing pdf docs
+Fourth part: +
 Fifth part: in process
 
 Кінцеві результати у папці coursova2, у папці coursova кінцевих результатів програми немає
