@@ -35,7 +35,7 @@ print(a.one_user_check('jogryn'))
 print('Now it is time to add pictures of user "noutbukiukrayina" likers statistic to which will be shown')
 a.handmade_stats('noutbukiukrayina')
 print(a)
-print('If you want to you can start following those who liked selected pictures\n'
+print('If you want to you can start following those who liked more than 50% of selected pictures\n'
       'It is useful when you check likers of your account and want to start follow people who like staff that you post')
-a.follow_4_follow()
+a.follow_4_follow(50)
 print('Done')

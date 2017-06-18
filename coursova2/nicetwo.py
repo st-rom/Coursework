@@ -78,7 +78,9 @@ class RealFriends:
         while inp != '':
             inp = raw_input(' Enter the number of image you want to add(from newest to oldest) '
                             '\n or enter two numbers divided  by space to add all images in '
-                            'that range(for example: "3 7").\n Press "Enter" to finish\n ')
+                            'that range(for example: "3 7").\n You can also enter numbers like -1 '
+                            'which will mean first picture from the end(oldest)'
+                            '\n Press "Enter" to finish\n ')
             try:
                 if inp == '':
                     break
@@ -168,7 +170,7 @@ class RealFriends:
                       '%(' + str(i[1]) + '/' + str(self.current_stats[1]) + ') of selected images\n'
         return string
 
-    def follow_4_follow(self, perc=0):
+    def follow_4_follow(self, perc=0, user=''):
         """
         A little function to help you to start follow those users who like you
         The list of people who like you contains only those who liked images from your last request if you
@@ -176,22 +178,29 @@ class RealFriends:
         If your last request was about another user program will suggest you to follow all users who liked
         at least one your image
         value perc: int, min % user had to liked of selected photos for you to start following him
+        value user: user's login, whom you want to start follow
         """
-        self.api.getSelfUsersFollowing()
-        following = self.api.LastJson
-        following = [ad['username'] for ad in following['users']]
-        if self.current_stats[2] != self.name:
-            sure = raw_input(' Are you sure you want to follow ALL people who liked your images? '
+        if user != '':
+            sure = raw_input(' Are you sure you want to follow this user? '
                              'Print "yes" to agree or press any button for no\n ')
             if sure == 'yes':
-                self.likers_stats()
+                self.api.follow(self._get_userid(user))
         else:
-            sure = raw_input(' Are you sure you want to follow all people who liked selected images? '
-                             'Print "yes" to agree or press any button for no\n ')
-        if sure == 'yes':
-            for i in self.current_stats[0]:
-                if i[0] not in following and int(i[1] * 100 / self.current_stats[1]) > perc:
-                    InstagramAPI.follow(self._get_userid(i[0]))
+            self.api.getSelfUsersFollowing()
+            following = self.api.LastJson
+            following = [ad['username'] for ad in following['users']]
+            if self.current_stats[2] != self.name:
+                sure = raw_input(' Are you sure you want to follow people who liked your images? '
+                                 'Print "yes" to agree or press any button for no\n ')
+                if sure == 'yes':
+                    self.likers_stats()
+            else:
+                sure = raw_input(' Are you sure you want to follow people who liked selected images? '
+                                 'Print "yes" to agree or press any button for no\n ')
+            if sure == 'yes':
+                for i in self.current_stats[0]:
+                    if i[0] not in following and int(i[1] * 100 / self.current_stats[1]) > perc:
+                        InstagramAPI.follow(self._get_userid(i[0]))
 
 
 if __name__ == "__main__":

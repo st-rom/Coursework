@@ -193,6 +193,10 @@ class GeoFriends:
         elif type(self.last_result) == list:
             for i in self.last_result:
                 string += 'At ' + i[1] + ' GMT user ' + i[2] + ' uploaded photo near ' + i[0] + ': ' + i[3] + '\n'
+        if string == '' and type(self.last_result) == dict:
+            print('No related users were found')
+        elif string == '' and type(self.last_result) == list:
+            print('No related pictures were found in that location for entered period of time')
         return string
 
 
